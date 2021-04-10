@@ -1,0 +1,17 @@
+{
+  "name": "Assignment2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "2.20.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "prisma": "2.20.1"
+  }
+}
