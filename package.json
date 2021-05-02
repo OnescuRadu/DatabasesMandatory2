@@ -4,10 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "@prisma/client": "2.20.1",
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "passport": "^0.4.1",

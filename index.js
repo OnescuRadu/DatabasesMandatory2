@@ -2,8 +2,11 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const { errorHandler } = require('./middleware/index');
+const { compare } = require('bcrypt');
 
 const db = require('./db');
+const { user: _user } = db;
 const app = express();
 app.use(express.json());
 app.use(
@@ -35,14 +38,17 @@ passport.use(
     },
     async function (username, password, done) {
       try {
-        const user = await db.user.findUnique({ where: { email: username } });
+        const user = await _user.findUnique({ where: { email: username } });
         if (!user) {
           return done(null, false);
         }
-        if (user.password !== password) {
-          return done(null, false);
-        }
-        return done(null, user);
+        compare(password, user.password, function(err, result) {
+          if (result) {
+            return done(null, user);
+          } else {
+            return done(null, false);
+          }
+        });
       } catch (error) {
         return done(error);
       }
@@ -51,6 +57,7 @@ passport.use(
 );
 
 app.use(require('./routes/index'));
+app.use(errorHandler);
 
 app.listen(port, (error) => {
   if (error) {

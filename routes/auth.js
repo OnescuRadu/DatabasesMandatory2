@@ -1,6 +1,6 @@
 const router = require('express').Router({ mergeParams: true });
 const passport = require('passport');
-const db = require('../db');
+const { authenticated } = require('../middleware');
 
 router.get('/login', (req, res) => {
   res.send({ response: 'Login failed' });
@@ -17,13 +17,5 @@ router.post(
     res.send({ response: 'User logged in successfully!' });
   }
 );
-
-// Authentication middleware for passport
-function authenticated(request, response, next) {
-  if (request.isAuthenticated()) {
-    return next();
-  }
-  response.status(401).send('User not authenticated');
-}
 
 module.exports = router;
