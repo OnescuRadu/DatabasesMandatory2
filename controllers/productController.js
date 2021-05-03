@@ -14,6 +14,8 @@ function createProduct(data) {
         data === undefined
         || data.name === undefined
         || data.code === undefined
+        || data.categoryId === undefined
+        || data.manufacturerId === undefined
     ) {
         throw new APIError("Missing required fields", 400);
     }
