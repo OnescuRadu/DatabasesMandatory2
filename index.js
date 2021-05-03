@@ -2,11 +2,10 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
-const { errorHandler } = require('./middleware/index');
+const { errorHandler, logger } = require('./middleware');
 const { compare } = require('bcrypt');
 
 const db = require('./db');
-const { user: _user } = db;
 const app = express();
 app.use(express.json());
 app.use(
@@ -18,6 +17,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(errorHandler, logger);
 
 const port = 3000;
 
@@ -38,7 +38,7 @@ passport.use(
     },
     async function (username, password, done) {
       try {
-        const user = await _user.findUnique({ where: { email: username } });
+        const user = await db.user.findUnique({ where: { email: username } });
         if (!user) {
           return done(null, false);
         }
@@ -56,8 +56,7 @@ passport.use(
   )
 );
 
-app.use(require('./routes/index'));
-app.use(errorHandler);
+app.use(require('./routes'));
 
 app.listen(port, (error) => {
   if (error) {

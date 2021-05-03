@@ -18,11 +18,24 @@ function hasRole(role) {
     }
 }
 
+function pad(number) {
+    return `0${number}`.substr(String(number).length - 1);
+}
+
+function timestamp() {
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mo = pad(now.getMonth());
+    const da = pad(now.getDay());
+    const hr = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+    const se = pad(now.getSeconds());
+    return `${yr}-${mo}-${da}@${hr}:${mi}:${se}`;
+}
+
 // Error handling middleware
 function errorHandler(error, request, response, next) {
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}@${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-    console.error(`${timestamp} ${error.name}: ${error.message}`);
+    console.error(`${timestamp()} ${error.name}: ${error.message}`);
     console.error(error.stack);
     if (error instanceof APIError) {
         return response.status(error.statusCode).json({ error: error.message });
@@ -31,8 +44,17 @@ function errorHandler(error, request, response, next) {
     }
 }
 
+// Logger middleware
+function logger(request, response, next) {
+    response.on('finish', () => {
+        console.log(`[${timestamp()}] User: ${request.user != undefined ? request.user.id : 'N/A' }, ${request.method} ${request.originalUrl} : ${response.statusCode}`)
+    });
+    next();
+}
+
 module.exports = {
     isAuthenticated,
+    hasRole,
     errorHandler,
-    hasRole
+    logger
 }

@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "create:user": "node ./scripts/createUser.js"
   },
   "dependencies": {
     "@prisma/client": "2.20.1",

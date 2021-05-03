@@ -3,7 +3,12 @@ const APIError = require('../utils/APIError');
 
 function getAllCategories() {
     return db.category.findMany({
-        include: { parent: true, subCategories: true }
+        select: {
+            id: true,
+            parentId: true,
+            name: true
+        },
+        where: { deleted: false }
     });
 }
 
@@ -15,7 +20,7 @@ async function createCategory(data) {
         throw new APIError("Missing required fields", 400);
     }
 
-    const parent = data.parentId !== undefined
+    const parent = data.parentId
         ? await db.category.findUnique({ where: { id: data.parentId } })
         : undefined
 
@@ -23,7 +28,10 @@ async function createCategory(data) {
         throw new APIError(`Can't set parent: category with id ${data.parentId} not found`, 404);
     }
 
-    return db.category.create({ data });
+    return db.category.create({
+        data,
+        include: { parent: true }
+    });
 }
 
 module.exports = {

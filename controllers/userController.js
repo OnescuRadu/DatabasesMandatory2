@@ -15,7 +15,7 @@ function getById(id) {
     });
 }
 
-async function createUser(data) {
+async function createUser(data, verified) {
     if (
         data === undefined
         || data.email === undefined
@@ -33,6 +33,10 @@ async function createUser(data) {
         createData.role = data.role;
     }
 
+    if (verified) {
+        createData.verified = true;
+    }
+
     return db.user.create({ data: createData });
 }
 
@@ -44,12 +48,9 @@ async function updateUserProfile(userId, data) {
         throw new APIError("Missing required fields", 400);
     }
 
-    console.log("Update hit: ", data);
-
     const updateData = pick(data, ["firstName", "lastName", "dateOfBirth"]);
     const updateAddressData = data.address != undefined ? pick(data.address,
         ["text", "street", "number", "floor", "door", "zipCode", "city"]) : undefined;
-
 
     return db.user.update({
         where: { id: userId },
