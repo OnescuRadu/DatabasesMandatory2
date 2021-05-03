@@ -62,12 +62,13 @@ model Seller {
     id          Int                @id @default(autoincrement())
     name        String
     legalName   String
-    cvr         String
+    cvr         String             @unique
     phoneNumber String
     address     Address            @relation(fields: [addressId], references: [id])
     addressId   Int
     owner       User               @relation(fields: [ownerId], references: [id])
     ownerId     Int
+    deleted     Boolean            @default(false)
     orders      Order[]
     ratings     SellerRating[]
     products    SellerToProducts[]
@@ -76,18 +77,19 @@ model Seller {
 }
 
 model SellerToProducts {
-    id            Int         @id @default(autoincrement())
-    seller        Seller      @relation(fields: [sellerId], references: [id])
+    id            Int            @id @default(autoincrement())
+    seller        Seller         @relation(fields: [sellerId], references: [id])
     sellerId      Int
-    product       Product     @relation(fields: [productId], references: [id])
+    product       Product        @relation(fields: [productId], references: [id])
     productId     Int
     originalPrice Int
     salePrice     Int?
     stockQty      Int
-    deleted       Boolean
+    deleted       Boolean        @default(false)
     orderItems    OrderItem[]
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
+    priceHistory  PriceHistory[]
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
 }
 
 model Order {
@@ -159,7 +161,7 @@ model Category {
     parentId      Int?
     subCategories Category[] @relation("Subcategories")
     name          String
-    deleted       Boolean
+    deleted       Boolean    @default(false)
     products      Product[]
     createdAt     DateTime   @default(now())
     updatedAt     DateTime   @updatedAt
@@ -168,7 +170,7 @@ model Category {
 model Product {
     id             Int                    @id @default(autoincrement())
     name           String
-    code           String
+    code           String                 @unique
     manufacturer   Manufacturer           @relation(fields: [manufacturerId], references: [id])
     manufacturerId Int
     description    ProductDescription?    @relation(fields: [descriptionId], references: [id])
@@ -176,13 +178,12 @@ model Product {
     properties     ProductsToProperties[]
     category       Category               @relation(fields: [categoryId], references: [id])
     categoryId     Int
-    approved       Boolean
-    deleted        Boolean
+    approved       Boolean                @default(false)
+    deleted        Boolean                @default(false)
     groups         ProductGroup[]
     images         ProductImage[]
     ratings        ProductRating[]
     sellers        SellerToProducts[]
-    priceHistory   PriceHistory[]
     createdAt      DateTime               @default(now())
     updatedAt      DateTime               @updatedAt
 }
@@ -239,13 +240,13 @@ model SellerRating {
 }
 
 model PriceHistory {
-    id           Int      @id @default(autoincrement())
-    product      Product  @relation(fields: [productId], references: [id])
-    productId    Int
-    oldPrice     Int
-    newPrice     Int
-    oldSalePrice Int
-    newSalePrice Int
-    createdAt    DateTime @default(now())
-    updatedAt    DateTime @updatedAt
+    id              Int              @id @default(autoincrement())
+    sellerProduct   SellerToProducts @relation(fields: [sellerProductId], references: [id])
+    sellerProductId Int
+    oldPrice        Int
+    newPrice        Int
+    oldSalePrice    Int
+    newSalePrice    Int
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
 }

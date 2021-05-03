@@ -1,12 +1,14 @@
-export function pick(object, properties) {
+function pick(object, properties) {
     const result = {};
     for (const prop of properties) {
-        result[prop] = object[prop];
+        if (object[prop] != undefined) {
+            result[prop] = object[prop];
+        }
     }
     return result;
 }
 
-export function pickAllExcept(object, properties) {
+function pickAllExcept(object, properties) {
     const result = {};
     for (const prop in object) {
         if (!properties.includes(prop)) {
@@ -15,3 +17,5 @@ export function pickAllExcept(object, properties) {
     }
     return result;
 }
+
+module.exports = { pick, pickAllExcept };

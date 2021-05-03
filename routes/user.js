@@ -1,10 +1,10 @@
 const router = require('express').Router({ mergeParams: true });
-const { authenticated } = require('../middleware');
+const { isAuthenticated, hasRole } = require('../middleware');
 const { userController } = require('../controllers');
 
 // Get all users
 
-router.get('/', authenticated, (req, res, next) => {
+router.get('/', isAuthenticated, (req, res, next) => {
     userController.getAllUsers()
         .then(users => res.json({ response: users }))
         .catch(next);
@@ -12,7 +12,7 @@ router.get('/', authenticated, (req, res, next) => {
 
 // Get user by id
 
-router.get('/:id', authenticated, (req, res, next) => {
+router.get('/:id', isAuthenticated, (req, res, next) => {
     const id = Number(req.params.id);
     userController.getById(id)
         .then(user => res.json({ response: user }))
@@ -21,9 +21,16 @@ router.get('/:id', authenticated, (req, res, next) => {
 
 // Create user
 
-router.post('/', (req, res, next) => {
+router.post('/', hasRole("Admin"), (req, res, next) => {
     userController.createUser(req.body)
         .then(user => res.json({ response: user }))
+        .catch(next);
+});
+
+// Update profile
+router.post('/profile', isAuthenticated, (req, res, next) => {
+    userController.updateUserProfile(req.user.id, req.body)
+        .then(result => res.json({ response: result }))
         .catch(next);
 });
 

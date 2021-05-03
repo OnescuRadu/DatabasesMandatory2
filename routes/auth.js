@@ -1,12 +1,12 @@
 const router = require('express').Router({ mergeParams: true });
 const passport = require('passport');
-const { authenticated } = require('../middleware');
+const { isAuthenticated } = require('../middleware');
 
 router.get('/login', (req, res) => {
   res.send({ response: 'Login failed' });
 });
 
-router.get('/protected', authenticated, (req, res) => {
+router.get('/protected', isAuthenticated, (req, res) => {
   res.send({ response: 'Secret' });
 });
 
