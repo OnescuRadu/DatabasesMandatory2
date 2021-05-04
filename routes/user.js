@@ -28,9 +28,18 @@ router.post('/', hasRole("Admin"), (req, res, next) => {
 });
 
 // Update profile
+
 router.post('/profile', isAuthenticated, (req, res, next) => {
     userController.updateUserProfile(req.user.id, req.body)
         .then(result => res.json({ response: result }))
+        .catch(next);
+});
+
+// Change password
+
+router.post('/changePass', isAuthenticated, (req, res, next) => {
+    userController.changePassword(req.user.id, req.body)
+        .then(user => res.json({ response: user }))
         .catch(next);
 });
 

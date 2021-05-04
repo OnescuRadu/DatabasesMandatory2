@@ -1,13 +1,16 @@
 const router = require('express').Router({ mergeParams: true });
 const passport = require('passport');
 const { isAuthenticated } = require('../middleware');
+const { userController } = require('../controllers')
 
 router.get('/login', (req, res) => {
   res.send({ response: 'Login failed' });
 });
 
-router.get('/protected', isAuthenticated, (req, res) => {
-  res.send({ response: 'Secret' });
+router.post('/register', (req, res, next) => {
+  userController.createUser(req.body)
+    .then(user => res.json({ response: user }))
+    .catch(next);
 });
 
 router.post(

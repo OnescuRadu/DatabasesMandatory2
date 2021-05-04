@@ -1,7 +1,8 @@
 const db = require('../db');
 const APIError = require('../utils/APIError');
-const { hash } = require('bcrypt');
+const { hash, compare } = require('bcrypt');
 const { pick } = require('../utils');
+const e = require('express');
 
 const numSaltRounds = process.env.NUM_SALT_ROUNDS | 10;
 
@@ -72,9 +73,40 @@ async function updateUserProfile(userId, data) {
     });
 }
 
+async function changePassword(userId, data) {
+    if (
+        data === undefined
+        || data.oldPassword === undefined
+        || data.newPassword === undefined
+    ) {
+        throw new APIError("Missing required fields", 400);
+    }
+
+    const user = await db.user.findUnique({ where: { id: userId } });
+    const validPass = await new Promise((resolve) => {
+        compare(data.oldPassword, user.password, (err, same) => {
+            if (same) {
+                resolve(true)
+            } else {
+                resolve(false)
+            }
+        });
+    });
+    
+    if (!validPass) {
+        throw new APIError("Wrong password", 401);
+    }
+
+    return db.user.update({
+        where: { id: userId },
+        data: { password: await hash(data.newPassword, numSaltRounds) }
+    });
+}
+
 module.exports = {
     getAllUsers,
     getById,
     createUser,
-    updateUserProfile
+    updateUserProfile,
+    changePassword
 }
