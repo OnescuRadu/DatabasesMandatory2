@@ -17,7 +17,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(errorHandler, logger);
+app.use(logger);
 
 const port = 3000;
 
@@ -57,6 +57,7 @@ passport.use(
 );
 
 app.use(require('./routes'));
+app.use(errorHandler);
 
 app.listen(port, (error) => {
   if (error) {

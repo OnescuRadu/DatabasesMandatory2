@@ -1,4 +1,5 @@
 const db = require('../db');
+const { pick } = require('../utils');
 const APIError = require('../utils/APIError');
 
 async function createSeller(data) {
@@ -39,7 +40,7 @@ async function createSeller(data) {
 }
 
 function getAllSellers() {
-    return db.seller.findMany();
+    return db.seller.findMany({ where: { deleted: false }});
 }
 
 function getSellerById(id) {
@@ -49,11 +50,60 @@ function getSellerById(id) {
 function findSellers(query) {
     return db.seller.findMany({
         where: {
-            OR: {
-                name: { contains: query },
-                legalName: { contains: query},
-                cvr: { contains: query }
-            }
+            AND: [
+                {
+                    OR: [
+                        { name: { contains: query } },
+                        { legalName: { contains: query} },
+                        { cvr: { contains: query } }
+                    ],
+                },
+                { deleted: false }
+            ]
+        }
+    });
+}
+
+async function updateSeller(id, data, userId) {
+    if (data === undefined) {
+        throw new APIError("Missing required fields", 400)
+    }
+
+    const caller = await db.user.findUnique({ where: { id: userId }});
+    const seller = await db.seller.findUnique({ where: { id }});
+
+    if (!seller) {
+        throw new APIError(`Seller with id ${id} not found.`, 404);
+    }
+
+    if (caller.role !== "Admin" && seller.ownerId !== userId) {
+        throw new APIError("You're only allowed to edit sellers you own.", 400);
+    }
+
+    const updateData = pick(data, ["name", "legalName", "cvr", "phoneNumber"]);
+    const updateAddress = data.address !== undefined ? pick(data.address,
+        ["text", "street", "number", "floor", "door", "zipCode", "city"]) : undefined;
+
+    return db.seller.update({
+        where: { id },
+        data: {
+            ...updateData,
+            address: data.address !== undefined ? { create: { data: updateAddress } } : undefined
+        }
+    });
+}
+
+async function deleteSeller(id) {
+    const seller = await db.seller.findUnique({ where: { id }});
+
+    if (!seller) {
+        throw new APIError(`Seller with id ${id} not found.`, 404);
+    }
+
+    return db.seller.update({
+        where: { id },
+        data: {
+            deleted: true
         }
     });
 }
@@ -61,5 +111,8 @@ function findSellers(query) {
 module.exports = {
     createSeller,
     getAllSellers,
-    getSellerById
+    getSellerById,
+    findSellers,
+    updateSeller,
+    deleteSeller
 }
