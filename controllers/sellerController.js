@@ -46,6 +46,18 @@ function getSellerById(id) {
     return db.seller.findUnique({ where: { id }});
 }
 
+function findSellers(query) {
+    return db.seller.findMany({
+        where: {
+            OR: {
+                name: { contains: query },
+                legalName: { contains: query},
+                cvr: { contains: query }
+            }
+        }
+    });
+}
+
 module.exports = {
     createSeller,
     getAllSellers,

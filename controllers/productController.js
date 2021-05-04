@@ -2,7 +2,14 @@ const db = require('../db');
 const APIError = require('../utils/APIError');
 
 function getAllProducts() {
-    return db.product.findMany();
+    return db.product.findMany({
+        include: {
+            manufacturer: true,
+            description: true,
+            category: true
+        },
+        where: { approved: true, deleted: false }
+    });
 }
 
 function getProductById(id) {

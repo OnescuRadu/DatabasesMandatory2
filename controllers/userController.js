@@ -67,7 +67,6 @@ async function updateUserProfile(userId, data) {
                     }
                 }
             }
-            
         },
         include: { personalData: { include: { address: true } } }
     });

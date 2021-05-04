@@ -30,7 +30,7 @@ router.post('/', hasRole("Admin"), (req, res, next) => {
         .catch(next);
 });
 
-router.patch('/:id', hasRole("Admin"), (req, res, next) => {
+router.put('/:id', hasRole("Admin"), (req, res, next) => {
     const id = Number(req.params.id);
     manufacturerController.updateManufacturer(id, req.body)
         .then(manufacturer => res.json({ response: manufacturer }))
