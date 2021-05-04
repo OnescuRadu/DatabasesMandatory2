@@ -8,10 +8,11 @@ function isAuthenticated(request, response, next) {
     response.status(401).send('User not authenticated');
 }
 
-function hasRole(role) {
+function hasRole(...roles) {
+    const finalRoles = roles.map(s => s.toLowerCase());
     return function (request, response, next) {
         if (request.isAuthenticated()
-            && request.user.role.toLowerCase() === role.toLowerCase()) {
+            && finalRoles.includes(request.user.role.toLowerCase())) {
             return next();
         }
         response.status(401).send('Not authorized');
