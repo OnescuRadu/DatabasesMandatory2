@@ -8,6 +8,10 @@ async function getById(user, id) {
         include: { seller: { include: { owner: true } } }
     });
 
+    if (!order) {
+        throw new APIError("Order not found", 404);
+    }
+
     if (
         user.role !== "Admin"
         && order.userId !== user.id
@@ -15,7 +19,7 @@ async function getById(user, id) {
     ) {
         throw new APIError("Not authorized to view this order", 401);
     }
-
+    
     delete order.seller;
     return order;
 }
@@ -44,9 +48,12 @@ async function createOrders(user, data) {
     const items = await db.sellerToProducts.findMany({
         where: { id: { in: data.items.map(oi => oi.sellerProductId) } }
     });
+    console.log("data", data);
+    console.log("items", items);
 
     const promises = [];
     groupBySeller(items).forEach((sellerItems) => {
+        console.log("sellerItems", sellerItems);
         promises.push(db.order.create({
             data: {
                 userId: user.id,
@@ -63,7 +70,7 @@ async function createOrders(user, data) {
                                         pricePaid: item.salePrice ? item.salePrice : item.originalPrice
                                     }
                                 }
-                            })
+                            }).filter(i => i !== undefined)
                         ]
                     }
                 }
