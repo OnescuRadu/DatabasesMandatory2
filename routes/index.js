@@ -23,5 +23,8 @@ router.use('/seller/:id/products', function (req, res, next) {
         }).catch(next)
 }, require('./sellerProducts'));
 router.use('/user', require('./user'));
+router.use('/product-rating', require('./productRating'));
+router.use('/product-description', require('./productDescription'));
+router.use('/product-image', require('./productImage'));
 
 module.exports = router;
