@@ -10,6 +10,14 @@ router.get('/search', isAuthenticated, (req, res, next) => {
         .catch(next);
 });
 
+router.get('/byProduct/:id', isAuthenticated, (req, res, next) => {
+    console.log("Search");
+    const id = Number(req.params.id);
+    sellerController.findByProduct(id)
+        .then(sellers => res.json({ response: sellers }))
+        .catch(next);
+});
+
 router.get('/:id', isAuthenticated, (req, res, next) => {
     console.log("By id");
     const id = Number(req.params.id);

@@ -64,6 +64,18 @@ function findSellers(query) {
     });
 }
 
+function findByProduct(id) {
+    return db.seller.findMany({
+        where: {
+            products: {
+                some: {
+                    productId: id
+                }
+            }
+        }
+    })
+}
+
 async function updateSeller(id, data, userId) {
     if (data === undefined) {
         throw new APIError("Missing required fields", 400)
@@ -113,6 +125,7 @@ module.exports = {
     getAllSellers,
     getSellerById,
     findSellers,
+    findByProduct,
     updateSeller,
     deleteSeller
 }
