@@ -4,6 +4,8 @@ const db = require('../db');
 
 router.use('/', require('./test'));
 router.use('/auth', require('./auth'));
+router.use('/order', require('./order'));
+router.use('/manufacturer', require('./manufacturer'));
 router.use('/product', require('./product'));
 router.use('/seller', require('./seller'));
 router.use('/seller/:id/products', function (req, res, next) {
@@ -21,6 +23,5 @@ router.use('/seller/:id/products', function (req, res, next) {
         }).catch(next)
 }, require('./sellerProducts'));
 router.use('/user', require('./user'));
-router.use('/manufacturer', require('./manufacturer'));
 
 module.exports = router;

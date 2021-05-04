@@ -103,10 +103,24 @@ async function changePassword(userId, data) {
     });
 }
 
+async function deleteUser(userId) {
+    const user = await db.user.findUnique({ where: { id: userId }});
+    return db.user.update({
+        where: { id: userId },
+        data: {
+            deleted: true,
+            personalData: user.personalDataId !== null ? {
+                delete: true
+            } : undefined
+        }
+    });
+}
+
 module.exports = {
     getAllUsers,
     getById,
     createUser,
     updateUserProfile,
-    changePassword
+    changePassword,
+    deleteUser
 }

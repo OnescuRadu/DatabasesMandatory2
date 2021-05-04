@@ -38,7 +38,7 @@ passport.use(
     },
     async function (username, password, done) {
       try {
-        const user = await db.user.findUnique({ where: { email: username } });
+        const user = await db.user.findFirst({ where: { email: username, deleted: false } });
         if (!user) {
           return done(null, false);
         }

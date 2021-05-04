@@ -13,6 +13,11 @@ router.post('/register', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/logout', (req, res, next) => {
+  req.logout();
+  res.json({ response: "Success" });
+})
+
 router.post(
   '/login',
   passport.authenticate('local', { failureRedirect: '/auth/login', session: true }),
