@@ -98,7 +98,7 @@ model Order {
     userId    Int
     seller    Seller      @relation(fields: [sellerId], references: [id])
     sellerId  Int
-    status    OrderStatus
+    status    OrderStatus @default(Pending)
     items     OrderItem[]
     createdAt DateTime    @default(now())
     updatedAt DateTime    @updatedAt

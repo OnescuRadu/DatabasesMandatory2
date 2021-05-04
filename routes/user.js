@@ -43,4 +43,12 @@ router.post('/changePass', isAuthenticated, (req, res, next) => {
         .catch(next);
 });
 
+// Delete user
+
+router.delete('/', isAuthenticated, (req, res, next) => {
+    userController.deleteUser(req.user.id)
+        .then(user => res.json({ response: user }))
+        .catch(next);
+})
+
 module.exports = router;
