@@ -1,16 +1,14 @@
 const db = require('../db');
 const APIError = require('../utils/APIError');
 
-
 function getProductDescriptionById(id) {
-    return db.productDescription.findFirst({ where: { id, deleted: false } });
+    return db.productDescription.findFirst({ where: { id } });
 }
 
 function getAllProductDescriptionsByProductId(productId) {
     return db.productDescription.findMany({
         where: {
             productId: productId,
-            deleted: false,
         },
     });
 }
