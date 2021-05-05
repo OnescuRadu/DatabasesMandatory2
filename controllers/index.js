@@ -8,6 +8,7 @@ const userController = require('./userController');
 const productRatingController = require('./productRatingController');
 const productImageController = require('./productImageController');
 const productDescriptionController = require('./productDescriptionController');
+const propertyController = require('./propertyController');
 
 module.exports = {
     categoryController,
@@ -20,4 +21,5 @@ module.exports = {
     productRatingController,
     productImageController,
     productDescriptionController,
+    propertyController,
 };

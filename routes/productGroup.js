@@ -24,6 +24,14 @@ router.post('/', hasRole('Admin'), (req, res, next) => {
         .catch(next);
 });
 
+router.put('/:id', hasRole('Admin'), (req, res, next) => {
+    const id = Number(req.params.id);
+    productController
+        .updateProductGroup(id, req.body)
+        .then((productGroup) => res.json({ response: productGroup }))
+        .catch(next);
+});
+
 router.delete('/:id', hasRole('Admin'), (req, res, next) => {
     const id = Number(req.params.id);
     productController

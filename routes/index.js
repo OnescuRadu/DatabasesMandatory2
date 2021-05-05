@@ -33,5 +33,6 @@ router.use('/product-rating', require('./productRating'));
 router.use('/product-description', require('./productDescription'));
 router.use('/product-image', require('./productImage'));
 router.use('/product-group', require('./productGroup'));
+router.use('/property', require('./property'));
 
 module.exports = router;
