@@ -38,13 +38,6 @@ router.post('/categories', hasRole('Admin'), (req, res, next) => {
         .catch(next);
 });
 
-router.delete('/image', hasRole('Admin'), (req, res, next) => {
-    productController
-        .removeImageFromProduct(req.body)
-        .then((product) => res.json({ response: product }))
-        .catch(next);
-});
-
 router.post('/group', hasRole('Admin'), (req, res, next) => {
     productController
         .addProductToGroup(req.body)
