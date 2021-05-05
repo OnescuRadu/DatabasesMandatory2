@@ -38,16 +38,27 @@ router.post('/categories', hasRole('Admin'), (req, res, next) => {
         .catch(next);
 });
 
-router.post('/group', hasRole('Admin'), (req, res, next) => {
+router.delete('/categories/:id', hasRole('Admin'), (req, res, next) => {
+    const id = Number(req.params.id);
+    categoryController
+        .deleteCategory(id)
+        .then((category) => res.json({ response: category }))
+        .catch(next);
+});
+
+router.put('/group', hasRole('Admin'), (req, res, next) => {
     productController
         .addProductToGroup(req.body)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });
 
-router.delete('/group', hasRole('Admin'), (req, res, next) => {
+router.delete('/:productId/group/:groupId', hasRole('Admin'), (req, res, next) => {
+    const productId = Number(req.params.productId);
+    const groupId = Number(req.params.groupId);
+
     productController
-        .removeProductFromGroup(req.body)
+        .removeProductFromGroup(productId, groupId)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });
@@ -55,6 +66,22 @@ router.delete('/group', hasRole('Admin'), (req, res, next) => {
 router.put('/description', hasRole('Admin'), (req, res, next) => {
     productController
         .addDescriptionToProduct(req.body)
+        .then((product) => res.json({ response: product }))
+        .catch(next);
+});
+
+router.post('/property', hasRole('Admin'), (req, res, next) => {
+    productController
+        .addPropertyToProduct(req.body)
+        .then((product) => res.json({ response: product }))
+        .catch(next);
+});
+
+router.delete('/property/:propertyId', hasRole('Admin'), (req, res, next) => {
+    const propertyId = Number(req.params.propertyId);
+
+    productController
+        .removeProperty(propertyId)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });

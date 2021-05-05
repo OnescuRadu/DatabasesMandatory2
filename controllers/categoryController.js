@@ -6,23 +6,18 @@ function getAllCategories() {
         select: {
             id: true,
             parentId: true,
-            name: true
+            name: true,
         },
-        where: { deleted: false }
+        where: { deleted: false },
     });
 }
 
 async function createCategory(data) {
-    if (
-        data === undefined
-        || data.name === undefined
-    ) {
-        throw new APIError("Missing required fields", 400);
+    if (data === undefined || data.name === undefined) {
+        throw new APIError('Missing required fields', 400);
     }
 
-    const parent = data.parentId
-        ? await db.category.findUnique({ where: { id: data.parentId } })
-        : undefined
+    const parent = data.parentId ? await db.category.findUnique({ where: { id: data.parentId } }) : undefined;
 
     if (data.parentId && !parent) {
         throw new APIError(`Can't set parent: category with id ${data.parentId} not found`, 404);
@@ -30,11 +25,26 @@ async function createCategory(data) {
 
     return db.category.create({
         data,
-        include: { parent: true }
+        include: { parent: true },
+    });
+}
+
+function deleteCategory(id) {
+    if (Number.isNaN(id)) {
+        throw new APIError('Invalid product description id', 400);
+    }
+
+    return db.category.delete({
+        select: {
+            id: true,
+            name: true,
+        },
+        where: { id },
     });
 }
 
 module.exports = {
     getAllCategories,
-    createCategory
-}
+    createCategory,
+    deleteCategory,
+};

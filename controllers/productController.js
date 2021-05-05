@@ -1,5 +1,5 @@
-const db = require("../db");
-const APIError = require("../utils/APIError");
+const db = require('../db');
+const APIError = require('../utils/APIError');
 
 function getAllProducts() {
     return db.product.findMany({
@@ -7,6 +7,7 @@ function getAllProducts() {
             manufacturer: true,
             description: true,
             category: true,
+            properties: true,
         },
         where: { approved: true, deleted: false },
     });
@@ -24,21 +25,36 @@ function createProduct(data) {
         data.categoryId === undefined ||
         data.manufacturerId === undefined
     ) {
-        throw new APIError("Missing required fields", 400);
+        throw new APIError('Missing required fields', 400);
     }
 
     return db.product.create({ data });
 }
 
+function updateProductGroup(id, data) {
+    if (Number.isNaN(id) || data.name === undefined) {
+        throw new APIError('Missing required fields', 400);
+    }
+
+    return db.productGroup.update({
+        select: {
+            id: true,
+            name: true,
+        },
+        where: { id },
+        data: { name: data.name },
+    });
+}
+
 function getProductGroupById(id) {
-    return db.productGroup.findFirst({ where: { id, deleted: false } });
+    return db.productGroup.findFirst({ where: { id } });
 }
 
 function createProductGroup(data) {
     if (data === undefined || data.name === undefined) {
-        throw new APIError("Missing required fields", 400);
+        throw new APIError('Missing required fields', 400);
     }
-    return db.productGroup.create({ data: { name } });
+    return db.productGroup.create({ data: { name: data.name } });
 }
 
 function getAllProductGroups() {
@@ -47,7 +63,7 @@ function getAllProductGroups() {
 
 async function deleteProductGroup(id) {
     if (Number.isNaN(id)) {
-        throw new APIError("Invalid product rating id", 400);
+        throw new APIError('Invalid product rating id', 400);
     }
 
     return db.productGroup.delete({
@@ -60,21 +76,17 @@ async function deleteProductGroup(id) {
 }
 
 async function addProductToGroup(data) {
-    if (
-        data === undefined ||
-        data.productId === undefined ||
-        data.groupId === undefined
-    ) {
-        throw new APIError("Missing required fields", 400);
+    if (data === undefined || data.productId === undefined || data.groupId === undefined) {
+        throw new APIError('Missing required fields', 400);
     }
 
     const product = await db.product.findUnique({
         where: { id: data.productId },
-        include: { productGroup: true },
+        include: { groups: true },
     });
 
     if (!product) {
-        throw new APIError("Product not found", 404);
+        throw new APIError('Product not found', 404);
     }
 
     const group = await db.productGroup.findUnique({
@@ -82,14 +94,11 @@ async function addProductToGroup(data) {
     });
 
     if (!group) {
-        throw new APIError("Product group not found", 404);
+        throw new APIError('Product group not found', 404);
     }
 
     if (product.groups.find((g) => g.id === data.groupId)) {
-        throw new APIError(
-            "Product is already part of that product group",
-            400
-        );
+        throw new APIError('Product is already part of that product group', 400);
     }
 
     return db.product.update({
@@ -116,7 +125,7 @@ async function addDescriptionToProduct(data) {
     });
 
     if (!product) {
-        throw new APIError("Product not found", 404);
+        throw new APIError('Product not found', 404);
     }
 
     descriptionId = Number(data.descriptionId);
@@ -140,37 +149,37 @@ async function addDescriptionToProduct(data) {
     });
 }
 
-async function removeProductFromGroup(data) {
-    if (data === undefined || data.productId === undefined || data.groupId === undefined) {
+async function removeProductFromGroup(productId, groupId) {
+    if (productId === undefined || groupId === undefined) {
         throw new APIError('Missing required fields', 400);
     }
 
     const product = await db.product.findUnique({
-        where: { id: data.productId },
-        include: { productGroup: true },
+        where: { id: productId },
+        include: { groups: true },
     });
 
     if (!product) {
-        throw new APIError("Product not found", 404);
+        throw new APIError('Product not found', 404);
     }
 
     const group = await db.productGroup.findUnique({
-        where: { id: data.groupId },
+        where: { id: groupId },
     });
 
     if (!group) {
         throw new APIError('Product group not found', 404);
     }
 
-    if (!product.groups.find((g) => g.id === data.groupId)) {
+    if (!product.groups.find((g) => g.id === groupId)) {
         throw new APIError('Product is not part of that product group', 400);
     }
 
     return db.product.update({
-        where: { id: data.productId },
+        where: { id: productId },
         data: {
             groups: {
-                disconnect: { id: data.groupId },
+                disconnect: { id: groupId },
             },
         },
         include: {
@@ -179,47 +188,56 @@ async function removeProductFromGroup(data) {
     });
 }
 
-//TODO
 async function addPropertyToProduct(data) {
-    if (
-        data === undefined ||
-        data.productId === undefined ||
-        data.propertyId === undefined
-    ) {
-        throw new APIError("Missing required fields", 400);
+    if (data === undefined || data.productId === undefined || data.propertyId === undefined || data.value === undefined) {
+        throw new APIError('Missing required fields', 400);
     }
 
     const product = await db.product.findUnique({
         where: { id: data.productId },
-        include: { productImage: true },
+        include: { properties: true },
     });
 
     if (!product) {
-        throw new APIError("Product not found", 404);
+        throw new APIError('Product not found', 404);
     }
 
-    const productImage = await db.productImage.findUnique({
-        where: { id: data.imageId },
+    const property = await db.property.findUnique({
+        where: { id: data.propertyId },
     });
 
-    if (!productImage) {
-        throw new APIError("Product image not found", 404);
+    if (!property) {
+        throw new APIError('Property not found', 404);
     }
 
-    if (product.images.find((i) => i.id === data.imageId)) {
-        throw new APIError("Product is already having this image.", 400);
-    }
-
-    return db.product.update({
-        where: { id: data.productId },
+    return db.productsToProperties.create({
         data: {
-            images: {
-                connect: { id: data.imageId },
+            product: {
+                connect: { id: data.productId },
             },
+            property: {
+                connect: { id: data.propertyId },
+            },
+            value: data.value,
         },
         include: {
-            images: true,
+            property: true,
+            product: true,
         },
+    });
+}
+
+async function removePropertyFromProduct(id) {
+    if (Number.isNaN(id)) {
+        throw new APIError('Missing required fields', 400);
+    }
+
+    return db.productsToProperties.delete({
+        select: {
+            id: true,
+            value: true,
+        },
+        where: { id },
     });
 }
 
@@ -230,8 +248,11 @@ module.exports = {
     getProductGroupById,
     getAllProductGroups,
     createProductGroup,
+    updateProductGroup,
     deleteProductGroup,
     addProductToGroup,
     removeProductFromGroup,
     addDescriptionToProduct,
+    addPropertyToProduct,
+    removePropertyFromProduct,
 };
