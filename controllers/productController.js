@@ -30,12 +30,33 @@ function createProduct(data) {
     return db.product.create({ data });
 }
 
-function createProductGroup(name) {
+function getProductGroupById(id) {
+    return db.productGroup.findFirst({ where: { id, deleted: false } });
+}
+
+function createProductGroup(data) {
+    if (data === undefined || data.name === undefined) {
+        throw new APIError('Missing required fields', 400);
+    }
     return db.productGroup.create({ data: { name } });
 }
 
 function getAllProductGroups() {
     return db.productGroup.findMany();
+}
+
+async function deleteProductGroup(id) {
+    if (Number.isNaN(id)) {
+        throw new APIError('Invalid product rating id', 400);
+    }
+
+    return db.productGroup.delete({
+        select: {
+            id: true,
+            name: true,
+        },
+        where: { id },
+    });
 }
 
 async function addProductToGroup(data) {
@@ -238,8 +259,10 @@ module.exports = {
     getAllProducts,
     getProductById,
     createProduct,
-    createProductGroup,
+    getProductGroupById,
     getAllProductGroups,
+    createProductGroup,
+    deleteProductGroup,
     addProductToGroup,
     removeProductFromGroup,
     addImageToProduct,
