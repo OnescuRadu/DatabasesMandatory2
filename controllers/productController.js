@@ -179,49 +179,6 @@ async function removeProductFromGroup(data) {
     });
 }
 
-async function removeProductFromGroup(data) {
-    if (
-        data === undefined ||
-        data.productId === undefined ||
-        data.groupId === undefined
-    ) {
-        throw new APIError("Missing required fields", 400);
-    }
-
-    const product = await db.product.findUnique({
-        where: { id: data.productId },
-        include: { productGroup: true },
-    });
-
-    if (!product) {
-        throw new APIError("Product not found", 404);
-    }
-
-    const group = await db.productGroup.findUnique({
-        where: { id: data.groupId },
-    });
-
-    if (!group) {
-        throw new APIError("Product group not found", 404);
-    }
-
-    if (!product.groups.find((g) => g.id === data.groupId)) {
-        throw new APIError("Product is not part of that product group", 400);
-    }
-
-    return db.product.update({
-        where: { id: data.productId },
-        data: {
-            groups: {
-                disconnect: { id: data.groupId },
-            },
-        },
-        include: {
-            groups: true,
-        },
-    });
-}
-
 //TODO
 async function addPropertyToProduct(data) {
     if (
