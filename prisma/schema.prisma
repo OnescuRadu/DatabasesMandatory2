@@ -209,6 +209,7 @@ model ProductGroup {
 
 model ProductImage {
     id        Int      @id @default(autoincrement())
+    url       String
     product   Product  @relation(fields: [productId], references: [id])
     productId Int
     createdAt DateTime @default(now())

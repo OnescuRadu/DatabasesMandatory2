@@ -1,28 +1,32 @@
 const db = require('../db');
 const APIError = require('../utils/APIError');
 
-
 function getProductRatingById(id) {
-    return db.productRating.findFirst({ where: { id, deleted: false } });
+    return db.productRating.findFirst({ where: { id } });
 }
 
 function getAllProductRatingsByProductId(productId) {
     return db.productRating.findMany({
         where: {
             productId: productId,
-            deleted: false,
         },
     });
 }
 
-function createProductRating(data) {
-    if (data === undefined || data.rating === undefined || data.review === undefined) {
+function createProductRating(data, user) {
+    if (data === undefined || data.rating === undefined || data.review === undefined || data.productId === undefined) {
         throw new APIError('Missing required fields', 400);
     }
 
     createData = {
         rating: data.rating,
         review: data.review,
+        product: {
+            connect: { id: data.productId },
+        },
+        user: {
+            connect: { id: user.id },
+        },
     };
 
     return db.productRating.create({ data: createData });
@@ -72,7 +76,8 @@ async function deleteProductRating(id, user) {
     return db.productRating.delete({
         select: {
             id: true,
-            name: true,
+            review: true,
+            rating: true,
         },
         where: { id },
     });

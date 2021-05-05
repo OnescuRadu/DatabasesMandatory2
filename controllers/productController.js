@@ -137,45 +137,6 @@ async function removeProductFromGroup(data) {
     });
 }
 
-async function addImageToProduct(data) {
-    if (data === undefined || data.productId === undefined || data.imageId === undefined) {
-        throw new APIError('Missing required fields', 400);
-    }
-
-    const product = await db.product.findUnique({
-        where: { id: data.productId },
-        include: { productImage: true },
-    });
-
-    if (!product) {
-        throw new APIError('Product not found', 404);
-    }
-
-    const productImage = await db.productImage.findUnique({
-        where: { id: data.imageId },
-    });
-
-    if (!productImage) {
-        throw new APIError('Product image not found', 404);
-    }
-
-    if (product.images.find((i) => i.id === data.imageId)) {
-        throw new APIError('Product is already having this image.', 400);
-    }
-
-    return db.product.update({
-        where: { id: data.productId },
-        data: {
-            images: {
-                connect: { id: data.imageId },
-            },
-        },
-        include: {
-            images: true,
-        },
-    });
-}
-
 async function removeImageFromProduct(data) {
     if (data === undefined || data.productId === undefined || data.imageId === undefined) {
         throw new APIError('Missing required fields', 400);
@@ -265,6 +226,5 @@ module.exports = {
     deleteProductGroup,
     addProductToGroup,
     removeProductFromGroup,
-    addImageToProduct,
     removeImageFromProduct,
 };

@@ -15,7 +15,7 @@ router.get('/:id', (req, res, next) => {
 router.get('/product/:id', (req, res, next) => {
     const id = Number(req.params.id);
     productImageController
-        .getProductImageByProductId(id)
+        .getAllProductImagesByProductId(id)
         .then((productImages) => res.json({ response: productImages }))
         .catch(next);
 });

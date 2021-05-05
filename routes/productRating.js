@@ -20,7 +20,7 @@ router.get('/product/:id', (req, res, next) => {
 
 router.post('/', isAuthenticated, (req, res, next) => {
     productRatingController
-        .createProductRating(req.body)
+        .createProductRating(req.body, req.user)
         .then((productRating) => res.json({ response: productRating }))
         .catch(next);
 });
