@@ -4,6 +4,13 @@ const { sellerProdController } = require('../controllers');
 
 // req.seller is available in this router
 
+router.get('/:id/history', isAuthenticated, (req, res, next) => {
+    const id = Number(req.params.id);
+    sellerProdController.getPriceHistory(id)
+        .then(sellerProduct => res.json({ response: sellerProduct }))
+        .catch(next);
+});
+
 router.get('/:id', isAuthenticated, (req, res, next) => {
     const id = Number(req.params.id);
     sellerProdController.getById(req.seller.id, id)
