@@ -37,7 +37,7 @@ router.post('/profile', isAuthenticated, (req, res, next) => {
 
 // Change password
 
-router.post('/changePass', isAuthenticated, (req, res, next) => {
+router.post('/change-pass', isAuthenticated, (req, res, next) => {
     userController.changePassword(req.user.id, req.body)
         .then(user => res.json({ response: user }))
         .catch(next);

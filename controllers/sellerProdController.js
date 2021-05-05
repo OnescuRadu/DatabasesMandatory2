@@ -7,12 +7,32 @@ function getAll(sellerId) {
         where: {
             sellerId: sellerId,
             deleted: false
-        }
+        },
+        include: { product: { include: {
+            manufacturer: { select: { id: true, name: true } },
+            description: { select: { id: true, description: true } },
+            properties: true,
+            category: { select: { id: true, parentId: true, name: true } },
+            groups: true,
+            images: true,
+            ratings: true
+        }}}
     });
 }
 
 function getById(sellerId, id) {
-    return db.sellerToProducts.findFirst({ where: { id, sellerId, deleted: false } });
+    return db.sellerToProducts.findFirst({
+        where: { id, sellerId, deleted: false },
+        include: { product: { include: {
+            manufacturer: { select: { id: true, name: true } },
+            description: { select: { id: true, description: true } },
+            properties: true,
+            category: { select: { id: true, parentId: true, name: true } },
+            groups: true,
+            images: true,
+            ratings: true
+        }}}
+    });
 }
 
 async function addProduct(seller, user, data) {
