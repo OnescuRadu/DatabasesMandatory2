@@ -5,7 +5,7 @@ const { productController, categoryController } = require('../controllers');
 router.get('/', isAuthenticated, (req, res, next) => {
     productController
         .getAllProducts()
-        .then((sellers) => res.json({ response: sellers }))
+        .then((products) => res.json({ response: products }))
         .catch(next);
 });
 
@@ -20,7 +20,7 @@ router.get('/:id', isAuthenticated, (req, res, next) => {
     const id = Number(req.params.id);
     productController
         .getProductById(id)
-        .then((seller) => res.json({ response: seller }))
+        .then((product) => res.json({ response: product }))
         .catch(next);
 });
 

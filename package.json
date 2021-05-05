@@ -7,7 +7,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "populate": "node ./scripts/populate.js",
-    "create:user": "node ./scripts/createUser.js"
+    "create:user": "node ./scripts/createUser.js",
+    "create:products": "node ./scripts/createProduct.js",
+    "create:sellerProds": "node ./scripts/createSellerProduct.js"
   },
   "dependencies": {
     "@prisma/client": "2.20.1",
