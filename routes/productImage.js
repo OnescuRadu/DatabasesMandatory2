@@ -1,6 +1,8 @@
 const router = require('express').Router({ mergeParams: true });
 const { isAuthenticated, hasRole } = require('../middleware');
 const { productImageController } = require('../controllers');
+const multer = require('multer');
+const utils = require('../utils/index');
 
 router.get('/:id', (req, res, next) => {
     const id = Number(req.params.id);
@@ -18,19 +20,12 @@ router.get('/product/:id', (req, res, next) => {
         .catch(next);
 });
 
-//TODO
-router.post('/', isAuthenticated, (req, res, next) => {
-    productImageController
-        .createProductImage(req.body)
-        .then((productImage) => res.json({ response: productImage }))
-        .catch(next);
-});
+//Multer Set-up for image upload
+const upload = multer({ storage: utils.multerStorage, fileFilter: utils.multerImageFilter });
 
-//TODO
-router.put('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
+router.post('/', isAuthenticated, upload.single('image'), (req, res, next) => {
     productImageController
-        .updateProductImage(id, req.body, req.user)
+        .createProductImage(req)
         .then((productImage) => res.json({ response: productImage }))
         .catch(next);
 });

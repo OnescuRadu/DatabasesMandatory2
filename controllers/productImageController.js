@@ -1,7 +1,6 @@
 const db = require('../db');
 const APIError = require('../utils/APIError');
 
-
 function getProductImageById(id) {
     return db.productImage.findFirst({ where: { id, deleted: false } });
 }
@@ -15,37 +14,20 @@ function getAllProductImagesByProductId(productId) {
     });
 }
 
-//TODO UPLOAD LOGIC
-function createProductImage(data) {
-    if (data === undefined) {
-        throw new APIError('Missing required fields', 400);
+function createProductImage(req) {
+    if (req.fileValidationError) {
+        throw new APIError('File validation check failed.', 400);
+    } else if (!req.file) {
+        throw new APIError('Please select an image to upload', 404);
+    } else if (err) {
+        throw new APIError('Internal server error.', 500);
     }
 
-    const url = '';
-
     createData = {
-        url: url,
+        url: req.path,
     };
 
     return db.productImage.create({ data: createData });
-}
-
-//TODO UPLOAD LOGIC
-async function updateProductImage(id, data) {
-    if (Number.isNaN(id)) {
-        throw new APIError('Missing required fields', 400);
-    }
-
-    const url = '';
-
-    return db.productImage.update({
-        select: {
-            id: true,
-            url: true,
-        },
-        where: { id },
-        data: { url: url },
-    });
 }
 
 async function deleteProductImage(id) {
