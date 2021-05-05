@@ -52,4 +52,11 @@ router.delete('/group', hasRole('Admin'), (req, res, next) => {
         .catch(next);
 });
 
+router.put('/description', hasRole('Admin'), (req, res, next) => {
+    productController
+        .addDescriptionToProduct(req.body)
+        .then((product) => res.json({ response: product }))
+        .catch(next);
+});
+
 module.exports = router;

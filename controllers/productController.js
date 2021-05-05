@@ -98,6 +98,41 @@ async function addProductToGroup(data) {
     });
 }
 
+async function addDescriptionToProduct(data) {
+    if (data === undefined || data.productId === undefined || data.descriptionId === undefined) {
+        throw new APIError('Missing required fields', 400);
+    }
+
+    const product = await db.product.findUnique({
+        where: { id: data.productId },
+        include: { description: true },
+    });
+
+    if (!product) {
+        throw new APIError('Product not found', 404);
+    }
+
+    descriptionId = Number(data.descriptionId);
+
+    const description = await db.productDescription.findFirst({ where: { id: descriptionId } });
+
+    if (!description) {
+        throw new APIError('Description not found', 404);
+    }
+
+    return db.product.update({
+        where: { id: data.productId },
+        data: {
+            description: {
+                connect: { id: data.descriptionId },
+            },
+        },
+        include: {
+            description: true,
+        },
+    });
+}
+
 async function removeProductFromGroup(data) {
     if (data === undefined || data.productId === undefined || data.groupId === undefined) {
         throw new APIError('Missing required fields', 400);
@@ -187,4 +222,5 @@ module.exports = {
     deleteProductGroup,
     addProductToGroup,
     removeProductFromGroup,
+    addDescriptionToProduct,
 };
