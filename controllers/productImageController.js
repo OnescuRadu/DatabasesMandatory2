@@ -2,14 +2,13 @@ const db = require('../db');
 const APIError = require('../utils/APIError');
 
 function getProductImageById(id) {
-    return db.productImage.findFirst({ where: { id, deleted: false } });
+    return db.productImage.findFirst({ where: { id } });
 }
 
 function getAllProductImagesByProductId(productId) {
     return db.productImage.findMany({
         where: {
             productId: productId,
-            deleted: false,
         },
     });
 }
@@ -19,12 +18,17 @@ function createProductImage(req) {
         throw new APIError('File validation check failed.', 400);
     } else if (!req.file) {
         throw new APIError('Please select an image to upload', 404);
-    } else if (err) {
+    } else if (req.err) {
         throw new APIError('Internal server error.', 500);
     }
 
+    const productId = Number(req.body.productId);
+
     createData = {
-        url: req.path,
+        url: req.file.path,
+        product: {
+            connect: { id: productId },
+        },
     };
 
     return db.productImage.create({ data: createData });
@@ -48,6 +52,5 @@ module.exports = {
     getProductImageById,
     getAllProductImagesByProductId,
     createProductImage,
-    updateProductImage,
     deleteProductImage,
 };
