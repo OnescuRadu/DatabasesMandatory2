@@ -5,11 +5,12 @@ function getProductDescriptionById(id) {
     return db.productDescription.findFirst({ where: { id } });
 }
 
-function getAllProductDescriptionsByProductId(productId) {
-    return db.productDescription.findMany({
-        where: {
-            productId: productId,
+function getProductDescriptionsByProductId(productId) {
+    return db.product.findFirst({
+        include: {
+            description: true,
         },
+        where: { approved: true, deleted: false, id: productId },
     });
 }
 
@@ -48,7 +49,7 @@ function deleteProductDescription(id, user) {
     return db.productDescription.delete({
         select: {
             id: true,
-            name: true,
+            description: true,
         },
         where: { id },
     });
@@ -56,7 +57,7 @@ function deleteProductDescription(id, user) {
 
 module.exports = {
     getProductDescriptionById,
-    getAllProductDescriptionsByProductId,
+    getProductDescriptionsByProductId,
     createProductDescription,
     updateProductDescription,
     deleteProductDescription,

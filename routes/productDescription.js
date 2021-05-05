@@ -13,7 +13,7 @@ router.get('/:id', (req, res, next) => {
 router.get('/product/:id', (req, res, next) => {
     const id = Number(req.params.id);
     productDescriptionController
-        .getAllProductDescriptionsByProductId(id)
+        .getProductDescriptionsByProductId(id)
         .then((productDescriptions) => res.json({ response: productDescriptions }))
         .catch(next);
 });
