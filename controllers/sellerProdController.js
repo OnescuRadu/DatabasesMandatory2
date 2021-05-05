@@ -59,10 +59,18 @@ async function deleteProduct(seller, user, id) {
     });
 }
 
+async function getPriceHistory(productId) {
+    return db.priceHistory.findMany({
+        where: { sellerProductId: productId },
+        orderBy: { createdAt: 'desc' }
+    });
+}
+
 module.exports = {
     getAll,
     getById,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getPriceHistory
 }
