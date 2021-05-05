@@ -1,5 +1,5 @@
-const db = require('../db');
-const APIError = require('../utils/APIError');
+const db = require("../db");
+const APIError = require("../utils/APIError");
 
 function getAllProducts() {
     return db.product.findMany({
@@ -24,7 +24,7 @@ function createProduct(data) {
         data.categoryId === undefined ||
         data.manufacturerId === undefined
     ) {
-        throw new APIError('Missing required fields', 400);
+        throw new APIError("Missing required fields", 400);
     }
 
     return db.product.create({ data });
@@ -36,7 +36,7 @@ function getProductGroupById(id) {
 
 function createProductGroup(data) {
     if (data === undefined || data.name === undefined) {
-        throw new APIError('Missing required fields', 400);
+        throw new APIError("Missing required fields", 400);
     }
     return db.productGroup.create({ data: { name } });
 }
@@ -47,7 +47,7 @@ function getAllProductGroups() {
 
 async function deleteProductGroup(id) {
     if (Number.isNaN(id)) {
-        throw new APIError('Invalid product rating id', 400);
+        throw new APIError("Invalid product rating id", 400);
     }
 
     return db.productGroup.delete({
@@ -60,8 +60,12 @@ async function deleteProductGroup(id) {
 }
 
 async function addProductToGroup(data) {
-    if (data === undefined || data.productId === undefined || data.groupId === undefined) {
-        throw new APIError('Missing required fields', 400);
+    if (
+        data === undefined ||
+        data.productId === undefined ||
+        data.groupId === undefined
+    ) {
+        throw new APIError("Missing required fields", 400);
     }
 
     const product = await db.product.findUnique({
@@ -70,7 +74,7 @@ async function addProductToGroup(data) {
     });
 
     if (!product) {
-        throw new APIError('Product not found', 404);
+        throw new APIError("Product not found", 404);
     }
 
     const group = await db.productGroup.findUnique({
@@ -78,11 +82,14 @@ async function addProductToGroup(data) {
     });
 
     if (!group) {
-        throw new APIError('Product group not found', 404);
+        throw new APIError("Product group not found", 404);
     }
 
     if (product.groups.find((g) => g.id === data.groupId)) {
-        throw new APIError('Product is already part of that product group', 400);
+        throw new APIError(
+            "Product is already part of that product group",
+            400
+        );
     }
 
     return db.product.update({
@@ -99,8 +106,12 @@ async function addProductToGroup(data) {
 }
 
 async function removeProductFromGroup(data) {
-    if (data === undefined || data.productId === undefined || data.groupId === undefined) {
-        throw new APIError('Missing required fields', 400);
+    if (
+        data === undefined ||
+        data.productId === undefined ||
+        data.groupId === undefined
+    ) {
+        throw new APIError("Missing required fields", 400);
     }
 
     const product = await db.product.findUnique({
@@ -109,7 +120,7 @@ async function removeProductFromGroup(data) {
     });
 
     if (!product) {
-        throw new APIError('Product not found', 404);
+        throw new APIError("Product not found", 404);
     }
 
     const group = await db.productGroup.findUnique({
@@ -117,11 +128,11 @@ async function removeProductFromGroup(data) {
     });
 
     if (!group) {
-        throw new APIError('Product group not found', 404);
+        throw new APIError("Product group not found", 404);
     }
 
     if (!product.groups.find((g) => g.id === data.groupId)) {
-        throw new APIError('Product is not part of that product group', 400);
+        throw new APIError("Product is not part of that product group", 400);
     }
 
     return db.product.update({
@@ -138,8 +149,12 @@ async function removeProductFromGroup(data) {
 }
 
 async function removeImageFromProduct(data) {
-    if (data === undefined || data.productId === undefined || data.imageId === undefined) {
-        throw new APIError('Missing required fields', 400);
+    if (
+        data === undefined ||
+        data.productId === undefined ||
+        data.imageId === undefined
+    ) {
+        throw new APIError("Missing required fields", 400);
     }
 
     const product = await db.product.findUnique({
@@ -148,7 +163,7 @@ async function removeImageFromProduct(data) {
     });
 
     if (!product) {
-        throw new APIError('Product not found', 404);
+        throw new APIError("Product not found", 404);
     }
 
     const productImage = await db.productImage.findUnique({
@@ -156,11 +171,11 @@ async function removeImageFromProduct(data) {
     });
 
     if (!productImage) {
-        throw new APIError('Product image not found', 404);
+        throw new APIError("Product image not found", 404);
     }
 
     if (!product.images.find((i) => i.id === data.imageId)) {
-        throw new APIError('Product is not having this image.', 400);
+        throw new APIError("Product is not having this image.", 400);
     }
 
     return db.product.update({
@@ -178,8 +193,12 @@ async function removeImageFromProduct(data) {
 
 //TODO
 async function addPropertyToProduct(data) {
-    if (data === undefined || data.productId === undefined || data.propertyId === undefined) {
-        throw new APIError('Missing required fields', 400);
+    if (
+        data === undefined ||
+        data.productId === undefined ||
+        data.propertyId === undefined
+    ) {
+        throw new APIError("Missing required fields", 400);
     }
 
     const product = await db.product.findUnique({
@@ -188,7 +207,7 @@ async function addPropertyToProduct(data) {
     });
 
     if (!product) {
-        throw new APIError('Product not found', 404);
+        throw new APIError("Product not found", 404);
     }
 
     const productImage = await db.productImage.findUnique({
@@ -196,11 +215,11 @@ async function addPropertyToProduct(data) {
     });
 
     if (!productImage) {
-        throw new APIError('Product image not found', 404);
+        throw new APIError("Product image not found", 404);
     }
 
     if (product.images.find((i) => i.id === data.imageId)) {
-        throw new APIError('Product is already having this image.', 400);
+        throw new APIError("Product is already having this image.", 400);
     }
 
     return db.product.update({
