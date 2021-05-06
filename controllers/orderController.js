@@ -5,7 +5,10 @@ const APIError = require('../utils/APIError');
 async function getById(user, id) {
     const order = await db.order.findUnique({
         where: { id },
-        include: { seller: { include: { owner: true } } }
+        include: {
+            seller: { include: { owner: true } },
+            items: true
+        }
     });
 
     if (!order) {
