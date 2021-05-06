@@ -11,7 +11,7 @@ router.get('/:id', isAuthenticated, (req, res, next) => {
 
 router.post('/', hasRole("User"), (req, res, next) => {
     orderController.createOrders(req.user, req.body)
-        .next(orders => res.json({ response: orders.length === 1 ? orders[0] : orders }))
+        .then(orders => res.json({ response: orders.length === 1 ? orders[0] : orders }))
         .catch(next);
 });
 
