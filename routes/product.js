@@ -81,7 +81,7 @@ router.delete('/property/:propertyId', hasRole('Admin'), (req, res, next) => {
     const propertyId = Number(req.params.propertyId);
 
     productController
-        .removeProperty(propertyId)
+        .removePropertyFromProduct(propertyId)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });
