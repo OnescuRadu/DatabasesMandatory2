@@ -19,7 +19,7 @@ async function getById(user, id) {
     ) {
         throw new APIError("Not authorized to view this order", 401);
     }
-    
+
     delete order.seller;
     return order;
 }
@@ -30,7 +30,7 @@ function groupBySeller(items) {
     do {
         result.push(rest.filter(i => i.sellerId === rest[0].sellerId));
         rest = rest.filter(i => i.sellerId !== rest[0].sellerId);
-    } while(rest.length > 0);
+    } while (rest.length > 0);
 
     return result;
 }
@@ -48,30 +48,26 @@ async function createOrders(user, data) {
     const items = await db.sellerToProducts.findMany({
         where: { id: { in: data.items.map(oi => oi.sellerProductId) } }
     });
-    console.log("data", data);
-    console.log("items", items);
 
     const promises = [];
     groupBySeller(items).forEach((sellerItems) => {
-        console.log("sellerItems", sellerItems);
+        const orderItems = sellerItems.map(item => {
+            const entry = data.items.find(i => i.sellerProductId === item.id);
+            if (entry) {
+                return {
+                    sellerProductId: item.id,
+                    quantity: entry.quantity,
+                    pricePaid: item.salePrice ? item.salePrice : item.originalPrice
+                }
+            }
+        });
         promises.push(db.order.create({
             data: {
                 userId: user.id,
                 sellerId: sellerItems[0].sellerId,
                 items: {
                     createMany: {
-                        data: [
-                            sellerItems.map(item => {
-                                const entry = data.items.find(i => i.id === item.id);
-                                if (entry) {
-                                    return {
-                                        sellerProductId: item.id,
-                                        quantity: entry.quantity,
-                                        pricePaid: item.salePrice ? item.salePrice : item.originalPrice
-                                    }
-                                }
-                            }).filter(i => i !== undefined)
-                        ]
+                        data: orderItems
                     }
                 }
             }

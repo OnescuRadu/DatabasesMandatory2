@@ -2,6 +2,7 @@ const {
     userController,
     categoryController,
     sellerController,
+    propertyController
 } = require("../controllers");
 const faker = require("faker");
 const { randAddr } = require("./common");
@@ -552,6 +553,36 @@ const manufacturers = [
     "Drugtesting",
     "Servicing",
 ];
+const properties = [
+    { name: "Weight", type: "Number" },
+    { name: "Length", type: "Number" },
+    { name: "Width", type: "Number" },
+    { name: "Height", type: "Number" },
+    { name: "Length", type: "Number" },
+    { name: "Processor", type: "String" },
+    { name: "Processor Count", type: "Number" },
+    { name: "Storage Capacity", type: "Number" },
+    { name: "Storage Type", type: "String" },
+    { name: "Memory", type: "Number" },
+    { name: "Memory Type", type: "String" },
+    { name: "Color", type: "String" },
+    { name: "Graphics Card", type: "String" },
+    { name: "Touchscreen", type: "Boolean" },
+    { name: "Length", type: "Number" },
+    { name: "Screen Resolution", type: "String" },
+    { name: "Screen Size", type: "Number" },
+    { name: "Length", type: "Number" },
+    { name: "Wireless Connectivity", type: "String" },
+    { name: "No. of USB2 Ports", type: "Number" },
+    { name: "No. of USB3 Ports", type: "Number" },
+    { name: "Battery Life (Hours)", type: "Number" },
+    { name: "Focal Length", type: "Number" },
+    { name: "Minimum Focal Length", type: "Number" },
+    { name: "Maximum Focal Length", type: "Number" },
+    { name: "Minimum Aperture Size", type: "Number" },
+    { name: "Maximum Aperture Size", type: "Number" },
+    { name: "Lens Type", type: "Number" },
+]
 
 function createUsers() {
     const promises = [];
@@ -630,10 +661,7 @@ if (require.main === module) {
     });
 
     const promises = [];
-    categories.forEach((cat) => {
-        console.log(cat);
-        promises.push(createCategory(cat));
-    });
+    categories.forEach((cat) => promises.push(createCategory(cat)));
     Promise.all(promises).then((cats) =>
         console.log("Successfully created categories:", cats)
     );
@@ -646,5 +674,13 @@ if (require.main === module) {
     );
     Promise.all(manuPromises).then((manu) =>
         console.log("Successfully created manufacturers:", manu)
+    );
+
+    const propPromises = [];
+    properties.forEach((property) =>
+        propPromises.push(propertyController.createProperty(property))
+    );
+    Promise.all(propPromises).then(props =>
+        console.log("Successfully created properties:", props)
     );
 }

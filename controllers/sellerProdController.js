@@ -60,7 +60,7 @@ async function updateProduct(seller, user, productId, data) {
         throw new APIError("Not authorized to update product.");
     }
 
-    const updateData = pick(data, ["productId", "originalPrice", "salePrice", "stockQty"]);
+    const updateData = pick(data, ["originalPrice", "salePrice", "stockQty"]);
 
     return db.sellerToProducts.update({
         where: { id: productId },
