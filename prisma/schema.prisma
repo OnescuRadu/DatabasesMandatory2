@@ -244,10 +244,10 @@ model PriceHistory {
     id              Int              @id @default(autoincrement())
     sellerProduct   SellerToProducts @relation(fields: [sellerProductId], references: [id])
     sellerProductId Int
-    oldPrice        Int
-    newPrice        Int
-    oldSalePrice    Int
-    newSalePrice    Int
+    oldPrice        Int?
+    newPrice        Int?
+    oldSalePrice    Int?
+    newSalePrice    Int?
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
 }
