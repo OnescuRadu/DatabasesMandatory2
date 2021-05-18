@@ -9,7 +9,7 @@ const {
 const faker = require("faker");
 
 const input = process.argv.length >= 3 ? Number(process.argv[2]) : null;
-const numProducts = input && Number.isNaN(input) ? 100 : input;
+const numProducts = input && Number.isNaN(input) ? input : 100;
 
 async function getRefData() {
     return {

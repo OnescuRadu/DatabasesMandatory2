@@ -3,9 +3,8 @@ const { hasRole } = require('../middleware');
 const { productController } = require('../controllers');
 
 router.get('/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productController
-        .getProductGroupById(id)
+        .getProductGroupById(req.params.id)
         .then((productGroup) => res.json({ response: productGroup }))
         .catch(next);
 });
@@ -25,17 +24,15 @@ router.post('/', hasRole('Admin'), (req, res, next) => {
 });
 
 router.put('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     productController
-        .updateProductGroup(id, req.body)
+        .updateProductGroup(req.params.id, req.body)
         .then((productGroup) => res.json({ response: productGroup }))
         .catch(next);
 });
 
 router.delete('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     productController
-        .deleteProductGroup(id)
+        .deleteProductGroup(req.params.id)
         .then((productGroup) => res.json({ response: productGroup }))
         .catch(next);
 });

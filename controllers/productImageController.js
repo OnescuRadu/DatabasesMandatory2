@@ -22,7 +22,7 @@ function createProductImage(req) {
         throw new APIError('Internal server error.', 500);
     }
 
-    const productId = Number(req.body.productId);
+    const productId = req.body.productId;
 
     createData = {
         url: req.file.path,
@@ -36,7 +36,7 @@ function createProductImage(req) {
 
 async function deleteProductImage(id) {
     if (Number.isNaN(id)) {
-        throw new APIError('Invalid product rating id', 400);
+        throw new APIError('Invalid product image id', 400);
     }
 
     return db.productImage.delete({

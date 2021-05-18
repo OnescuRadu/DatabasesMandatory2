@@ -3,8 +3,7 @@ const { isAuthenticated, hasRole } = require('../middleware');
 const { orderController } = require('../controllers');
 
 router.get('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
-    orderController.getById(req.user, id)
+    orderController.getById(req.params.id, id)
         .then(order => res.json({ response: order }))
         .catch(next);
 });

@@ -17,9 +17,8 @@ router.get('/categories', isAuthenticated, (req, res, next) => {
 });
 
 router.get('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
     productController
-        .getProductById(id)
+        .getProductById(req.params.id)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });
@@ -39,9 +38,8 @@ router.post('/categories', hasRole('Admin'), (req, res, next) => {
 });
 
 router.delete('/categories/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     categoryController
-        .deleteCategory(id)
+        .deleteCategory(req.params.id)
         .then((category) => res.json({ response: category }))
         .catch(next);
 });
@@ -54,11 +52,8 @@ router.put('/group', hasRole('Admin'), (req, res, next) => {
 });
 
 router.delete('/:productId/group/:groupId', hasRole('Admin'), (req, res, next) => {
-    const productId = Number(req.params.productId);
-    const groupId = Number(req.params.groupId);
-
     productController
-        .removeProductFromGroup(productId, groupId)
+        .removeProductFromGroup(req.params.productId, req.params.groupId)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });
@@ -77,11 +72,9 @@ router.post('/property', hasRole('Admin'), (req, res, next) => {
         .catch(next);
 });
 
-router.delete('/property/:propertyId', hasRole('Admin'), (req, res, next) => {
-    const propertyId = Number(req.params.propertyId);
-
+router.delete('/property/:prodPropId', hasRole('Admin'), (req, res, next) => {
     productController
-        .removePropertyFromProduct(propertyId)
+        .removePropertyFromProduct(req.params.prodPropId)
         .then((product) => res.json({ response: product }))
         .catch(next);
 });

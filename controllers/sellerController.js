@@ -47,21 +47,14 @@ function getSellerById(id) {
     return db.seller.findUnique({ where: { id }});
 }
 
-function findSellers(query) {
-    return db.seller.findMany({
-        where: {
-            AND: [
-                {
-                    OR: [
-                        { name: { contains: query } },
-                        { legalName: { contains: query} },
-                        { cvr: { contains: query } }
-                    ],
-                },
-                { deleted: false }
-            ]
-        }
+async function findSellers(query) {
+    const sellers = await db.seller.findMany({
+        where: { deleted: false } 
     });
+    return sellers.filter(seller => 
+        seller.name.indexOf(query) !== -1
+        || seller.legalName.indexOf(query) !== -1
+        || seller.cvr.indexOf(query) !== -1)
 }
 
 function findByProduct(id) {

@@ -3,17 +3,15 @@ const { isAuthenticated, hasRole } = require('../middleware');
 const { productDescriptionController } = require('../controllers');
 
 router.get('/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productDescriptionController
-        .getProductDescriptionById(id)
+        .getProductDescriptionById(req.params.id)
         .then((productDescription) => res.json({ response: productDescription }))
         .catch(next);
 });
 
 router.get('/product/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productDescriptionController
-        .getProductDescriptionsByProductId(id)
+        .getProductDescriptionsByProductId(req.params.id)
         .then((productDescriptions) => res.json({ response: productDescriptions }))
         .catch(next);
 });
@@ -26,17 +24,15 @@ router.post('/', isAuthenticated, (req, res, next) => {
 });
 
 router.put('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     productDescriptionController
-        .updateProductDescription(id, req.body, req.user)
+        .updateProductDescription(req.params.id, req.body, req.user)
         .then((productDescription) => res.json({ response: productDescription }))
         .catch(next);
 });
 
 router.delete('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     productDescriptionController
-        .deleteProductDescription(id, req.user)
+        .deleteProductDescription(req.params.id, req.user)
         .then((productDescription) => res.json({ response: productDescription }))
         .catch(next);
 });

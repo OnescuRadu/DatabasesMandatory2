@@ -11,15 +11,14 @@ router.get('/', isAuthenticated, (req, res, next) => {
 });
 
 router.get('/search', isAuthenticated, (req, res, next) => {
-    const query = Number(req.query.q);
+    const query = req.query.q;
     manufacturerController.findManufacturers(query)
         .then(manufacturers => res.json({ response: manufacturers }))
         .catch(next);
 });
 
 router.get('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
-    manufacturerController.getById(id)
+    manufacturerController.getById(req.params.id)
         .then(manufacturer => res.json({ response: manufacturer }))
         .catch(next);
 });
@@ -31,15 +30,13 @@ router.post('/', hasRole("Admin"), (req, res, next) => {
 });
 
 router.put('/:id', hasRole("Admin"), (req, res, next) => {
-    const id = Number(req.params.id);
-    manufacturerController.updateManufacturer(id, req.body)
+    manufacturerController.updateManufacturer(req.params.id, req.body)
         .then(manufacturer => res.json({ response: manufacturer }))
         .catch(next);
 });
 
 router.delete('/:id', hasRole("Admin"), (req, res, next) => {
-    const id = Number(req.params.id);
-    manufacturerController.deleteManufacturer(id)
+    manufacturerController.deleteManufacturer(req.params.id)
         .then(category => res.json({ response: category }))
         .catch(next);
 });

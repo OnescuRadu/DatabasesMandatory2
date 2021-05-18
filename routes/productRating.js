@@ -3,17 +3,15 @@ const { isAuthenticated } = require('../middleware');
 const { productRatingController } = require('../controllers');
 
 router.get('/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productRatingController
-        .getProductRatingById(id)
+        .getProductRatingById(req.params.id)
         .then((productRating) => res.json({ response: productRating }))
         .catch(next);
 });
 
 router.get('/product/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productRatingController
-        .getAllProductRatingsByProductId(id)
+        .getAllProductRatingsByProductId(req.params.id)
         .then((productRatings) => res.json({ response: productRatings }))
         .catch(next);
 });
@@ -26,17 +24,15 @@ router.post('/', isAuthenticated, (req, res, next) => {
 });
 
 router.put('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
     productRatingController
-        .updateProductRating(id, req.body, req.user)
+        .updateProductRating(req.params.id, req.body, req.user)
         .then((productRating) => res.json({ response: productRating }))
         .catch(next);
 });
 
 router.delete('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
     productRatingController
-        .deleteProductRating(id, req.user)
+        .deleteProductRating(req.params.id, req.user)
         .then((productRating) => res.json({ response: productRating }))
         .catch(next);
 });

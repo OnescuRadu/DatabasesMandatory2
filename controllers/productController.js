@@ -14,7 +14,18 @@ function getAllProducts() {
 }
 
 function getProductById(id) {
-    return db.product.findUnique({ where: { id } });
+    return db.product.findUnique({
+        where: { id },
+        include: {
+            category: true,
+            description: true,
+            // groups: true,
+            images: true,
+            manufacturer: true,
+            properties: true,
+            ratings: true,
+        }
+    });
 }
 
 function createProduct(data) {
@@ -80,16 +91,16 @@ async function addProductToGroup(data) {
         throw new APIError('Missing required fields', 400);
     }
 
-    const product = await db.product.findUnique({
+    const product = await db.product.findFirst({
         where: { id: data.productId },
-        include: { groups: true },
+        // include: { groups: true },
     });
 
     if (!product) {
         throw new APIError('Product not found', 404);
     }
 
-    const group = await db.productGroup.findUnique({
+    const group = await db.productGroup.findFirst({
         where: { id: data.groupId },
     });
 
@@ -97,9 +108,9 @@ async function addProductToGroup(data) {
         throw new APIError('Product group not found', 404);
     }
 
-    if (product.groups.find((g) => g.id === data.groupId)) {
-        throw new APIError('Product is already part of that product group', 400);
-    }
+    // if (product.groups.find((g) => g.id === data.groupId)) {
+    //     throw new APIError('Product is already part of that product group', 400);
+    // }
 
     return db.product.update({
         where: { id: data.productId },
@@ -108,9 +119,9 @@ async function addProductToGroup(data) {
                 connect: { id: data.groupId },
             },
         },
-        include: {
-            groups: true,
-        },
+        // include: {
+        //     groups: true,
+        // },
     });
 }
 
@@ -128,7 +139,7 @@ async function addDescriptionToProduct(data) {
         throw new APIError('Product not found', 404);
     }
 
-    descriptionId = Number(data.descriptionId);
+    descriptionId = data.descriptionId;
 
     const description = await db.productDescription.findFirst({ where: { id: descriptionId } });
 

@@ -13,8 +13,7 @@ router.get('/', isAuthenticated, (req, res, next) => {
 // Get user by id
 
 router.get('/:id', isAuthenticated, (req, res, next) => {
-    const id = Number(req.params.id);
-    userController.getById(id)
+    userController.getById(req.params.id)
         .then(user => res.json({ response: user }))
         .catch(next);
 });

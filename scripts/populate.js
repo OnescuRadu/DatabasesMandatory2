@@ -609,11 +609,11 @@ async function createCategory(category, parentId) {
         parentId: parentId ? parentId : null,
     });
     if (category.children && category.children.length > 0) {
-        const promises = [];
-        category.children.forEach((childCat) => {
-            promises.push(createCategory(childCat, newCat.id));
+        newCat.children = [];
+        category.children.forEach(async (childCat) => {
+            const child = await createCategory(childCat, newCat.id)
+            newCat.children.push(child);
         });
-        newCat.children = await Promise.all(promises);
     }
     return newCat;
 }

@@ -3,9 +3,8 @@ const { hasRole } = require('../middleware');
 const { propertyController } = require('../controllers');
 
 router.get('/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     propertyController
-        .getPropertyById(id)
+        .getPropertyById(req.params.id)
         .then((property) => res.json({ response: property }))
         .catch(next);
 });
@@ -25,17 +24,15 @@ router.post('/', hasRole('Admin'), (req, res, next) => {
 });
 
 router.put('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     propertyController
-        .updateProperty(id, req.body)
+        .updateProperty(req.params.id, req.body)
         .then((property) => res.json({ response: property }))
         .catch(next);
 });
 
 router.delete('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     propertyController
-        .deleteProperty(id)
+        .deleteProperty(req.params.id)
         .then((property) => res.json({ response: property }))
         .catch(next);
 });

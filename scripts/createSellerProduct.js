@@ -7,7 +7,7 @@ const { randInt } = require('./common');
 const faker = require("faker");
 
 const input = process.argv.length >= 3 ? Number(process.argv[2]) : null;
-const numProducts = input && Number.isNaN(input) ? 1000 : input;
+const numProducts = input && Number.isNaN(input) ? input : 1000;
 
 async function getRefData() {
     const result = {

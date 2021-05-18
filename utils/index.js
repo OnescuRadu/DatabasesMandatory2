@@ -4,7 +4,7 @@ const path = require('path');
 function pick(object, properties) {
     const result = {};
     for (const prop of properties) {
-        if (object[prop] != undefined) {
+        if (object[prop] !== undefined) {
             result[prop] = object[prop];
         }
     }

@@ -17,7 +17,7 @@ async function createCategory(data) {
         throw new APIError('Missing required fields', 400);
     }
 
-    const parent = data.parentId ? await db.category.findUnique({ where: { id: data.parentId } }) : undefined;
+    const parent = data.parentId ? await db.category.findFirst({ where: { id: data.parentId } }) : undefined;
 
     if (data.parentId && !parent) {
         throw new APIError(`Can't set parent: category with id ${data.parentId} not found`, 404);

@@ -13,7 +13,7 @@ function getAll(sellerId) {
             description: { select: { id: true, description: true } },
             properties: true,
             category: { select: { id: true, parentId: true, name: true } },
-            groups: true,
+            // groups: true,
             images: true,
             ratings: true
         }}}
@@ -28,7 +28,7 @@ function getById(sellerId, id) {
             description: { select: { id: true, description: true } },
             properties: true,
             category: { select: { id: true, parentId: true, name: true } },
-            groups: true,
+            // groups: true,
             images: true,
             ratings: true
         }}}
@@ -55,15 +55,34 @@ async function addProduct(seller, user, data) {
     return db.sellerToProducts.create({ data: createData });
 }
 
-async function updateProduct(seller, user, productId, data) {
+async function updateProduct(seller, user, sellerProdId, data) {
+    const prod = await db.sellerToProducts.findFirst({ where: { id: sellerProdId, deleted: false } });
+    if (!prod) {
+        throw new APIError("Product not found.", 404);
+    }
+
     if (user.role !== "Admin" && seller.ownerId !== user.id) {
-        throw new APIError("Not authorized to update product.");
+        throw new APIError("Not authorized to update product.", 400);
     }
 
     const updateData = pick(data, ["originalPrice", "salePrice", "stockQty"]);
+    console.log("update data:", data, updateData);
+
+    if (prod.salePrice !== data.salePrice || prod.originalPrice !== data.originalPrice) {
+        console.log("Inserting price history");
+        await db.priceHistory.create({
+            data: {
+                sellerProductId: sellerProdId,
+                oldPrice: prod.originalPrice,
+                newPrice: data.originalPrice,
+                oldSalePrice: prod.salePrice,
+                newSalePrice: data.salePrice
+            }
+        });
+    }
 
     return db.sellerToProducts.update({
-        where: { id: productId },
+        where: { id: sellerProdId },
         data: updateData
     });
 }

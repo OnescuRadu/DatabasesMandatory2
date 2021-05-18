@@ -48,9 +48,9 @@ async function createOrders(user, data) {
         throw new APIError("Missing required fields", 400);
     }
 
-    const items = await db.sellerToProducts.findMany({
-        where: { id: { in: data.items.map(oi => oi.sellerProductId) } }
-    });
+    const ids = data.items.map(oi => oi.sellerProductId);
+    const allItems = await db.sellerToProducts.findMany();
+    const items = allItems.filter(item => ids.includes(item.id));
 
     const promises = [];
     groupBySeller(items).forEach((sellerItems) => {

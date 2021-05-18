@@ -5,17 +5,15 @@ const multer = require('multer');
 const utils = require('../utils/index');
 
 router.get('/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productImageController
-        .getProductImageById(id)
+        .getProductImageById(req.params.id)
         .then((productImage) => res.json({ response: productImage }))
         .catch(next);
 });
 
 router.get('/product/:id', (req, res, next) => {
-    const id = Number(req.params.id);
     productImageController
-        .getAllProductImagesByProductId(id)
+        .getAllProductImagesByProductId(req.params.id)
         .then((productImages) => res.json({ response: productImages }))
         .catch(next);
 });
@@ -31,9 +29,8 @@ router.post('/', isAuthenticated, upload.single('image'), (req, res, next) => {
 });
 
 router.delete('/:id', hasRole('Admin'), (req, res, next) => {
-    const id = Number(req.params.id);
     productImageController
-        .deleteProductImage(id, req.user)
+        .deleteProductImage(req.params.id, req.user)
         .then((productImage) => res.json({ response: productImage }))
         .catch(next);
 });

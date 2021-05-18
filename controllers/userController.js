@@ -2,7 +2,6 @@ const db = require('../db');
 const APIError = require('../utils/APIError');
 const { hash, compare } = require('bcrypt');
 const { pick } = require('../utils');
-const e = require('express');
 
 const numSaltRounds = process.env.NUM_SALT_ROUNDS | 10;
 
@@ -25,7 +24,12 @@ async function createUser(data, verified) {
         throw new APIError("Missing required fields", 400);
     }
 
-    createData = {
+    const user = await db.user.findFirst({ where: { email: data.email } });
+    if (user) {
+        throw new APIError("Email already taken", 400);
+    }
+
+    const createData = {
         email: data.email,
         password: await hash(data.password, numSaltRounds),
     }
