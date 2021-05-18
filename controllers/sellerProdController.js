@@ -66,10 +66,8 @@ async function updateProduct(seller, user, sellerProdId, data) {
     }
 
     const updateData = pick(data, ["originalPrice", "salePrice", "stockQty"]);
-    console.log("update data:", data, updateData);
 
     if (prod.salePrice !== data.salePrice || prod.originalPrice !== data.originalPrice) {
-        console.log("Inserting price history");
         await db.priceHistory.create({
             data: {
                 sellerProductId: sellerProdId,

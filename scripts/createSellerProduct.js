@@ -14,7 +14,6 @@ async function getRefData() {
         sellers: await sellerController.getAllSellers(),
         products: await productController.getAllProducts()    
     };
-    console.log(result);
     return result;
 }
 
