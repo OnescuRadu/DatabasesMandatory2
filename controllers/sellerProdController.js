@@ -13,7 +13,7 @@ function getAll(sellerId) {
             description: { select: { id: true, description: true } },
             properties: true,
             category: { select: { id: true, parentId: true, name: true } },
-            // groups: true,
+            groups: true,
             images: true,
             ratings: true
         }}}
@@ -28,7 +28,7 @@ function getById(sellerId, id) {
             description: { select: { id: true, description: true } },
             properties: true,
             category: { select: { id: true, parentId: true, name: true } },
-            // groups: true,
+            groups: true,
             images: true,
             ratings: true
         }}}

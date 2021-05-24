@@ -19,7 +19,7 @@ function getProductById(id) {
         include: {
             category: true,
             description: true,
-            // groups: true,
+            groups: true,
             images: true,
             manufacturer: true,
             properties: true,
@@ -58,7 +58,12 @@ function updateProductGroup(id, data) {
 }
 
 function getProductGroupById(id) {
-    return db.productGroup.findFirst({ where: { id } });
+    return db.productGroup.findFirst({ 
+        where: { id }, 
+        include: {
+            products: true
+        } 
+    });
 }
 
 function createProductGroup(data) {
@@ -93,7 +98,7 @@ async function addProductToGroup(data) {
 
     const product = await db.product.findFirst({
         where: { id: data.productId },
-        // include: { groups: true },
+        include: { groups: true },
     });
 
     if (!product) {
@@ -108,9 +113,9 @@ async function addProductToGroup(data) {
         throw new APIError('Product group not found', 404);
     }
 
-    // if (product.groups.find((g) => g.id === data.groupId)) {
-    //     throw new APIError('Product is already part of that product group', 400);
-    // }
+    if (product.groups.find((g) => g.id === data.groupId)) {
+        throw new APIError('Product is already part of that product group', 400);
+    }
 
     return db.product.update({
         where: { id: data.productId },
@@ -119,9 +124,9 @@ async function addProductToGroup(data) {
                 connect: { id: data.groupId },
             },
         },
-        // include: {
-        //     groups: true,
-        // },
+        include: {
+            groups: true,
+        },
     });
 }
 

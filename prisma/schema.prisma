@@ -181,7 +181,8 @@ model Product {
     categoryId     String                 @db.ObjectId
     approved       Boolean                @default(false)
     deleted        Boolean                @default(false)
-    groups         ProductGroup[]
+    groups_ids     String[]               @db.Array(ObjectId)
+    groups         ProductGroup[]         @relation(fields: [groups_ids])
     images         ProductImage[]
     ratings        ProductRating[]
     sellers        SellerToProducts[]
@@ -201,11 +202,12 @@ model ProductsToProperties {
 }
 
 model ProductGroup {
-    id        String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+    id        String        @id @default(dbgenerated()) @map("_id") @db.ObjectId
     name      String?
-    products  Product[]
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    products_ids String[]   @db.Array(ObjectId)
+    products  Product[]     @relation(fields: [products_ids])
+    createdAt DateTime      @default(now())
+    updatedAt DateTime      @updatedAt
 }
 
 model ProductImage {
