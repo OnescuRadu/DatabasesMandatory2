@@ -27,18 +27,13 @@ function getById(id) {
     });
 }
 
-function findManufacturers(query) {
-    return db.manufacturer.findMany({
+async function findManufacturers(query) {
+    return (await db.manufacturer.findMany({
         select: {
             id: true,
             name: true
-        },
-        where: {
-            name: {
-                contains: query
-            }
         }
-    });
+    })).filter(man => man.name.indexOf(query) !== -1);
 }
 
 function createManufacturer(data) {

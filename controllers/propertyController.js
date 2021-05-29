@@ -26,8 +26,8 @@ function createProperty(data) {
     return db.property.create({ data: createData });
 }
 
-async function updateProperty(id, data, user) {
-    if (data === undefined || data.name === undefined || data.type === undefined) {
+async function updateProperty(id, data) {
+    if (data === undefined || (data.name === undefined && data.type === undefined)) {
         throw new APIError('Missing required fields', 400);
     }
 
