@@ -68,7 +68,7 @@ let options = {
             title: 'Databases Final Project',
             version: '1.0.0',
         },
-        host: 'localhost:3000',
+        host: process.env.BASE_URL,
         basePath: '/',
         produces: [
             "application/json"
