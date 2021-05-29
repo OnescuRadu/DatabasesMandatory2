@@ -8,7 +8,7 @@ const { sellerController } = require('../controllers');
  * @group seller - Seller routes
  * @param {string} q.query.required - The search string
  * @returns {Array.object} 200 - Array of Sellers whose name, legal name, or cvr match the search query
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/search', isAuthenticated, (req, res, next) => {
@@ -24,7 +24,7 @@ router.get('/search', isAuthenticated, (req, res, next) => {
  * @group seller - Seller routes
  * @param {string} id.path.required - The id of a Product
  * @returns {Array.object} 200 - Array of Sellers that are selling the product
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/byProduct/:id', isAuthenticated, (req, res, next) => {
@@ -39,7 +39,7 @@ router.get('/byProduct/:id', isAuthenticated, (req, res, next) => {
  * @group seller - Seller routes
  * @param {string} id.path.required - The id of the Seller to be looked up
  * @returns {object} 200 - Seller object or null
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/:id', isAuthenticated, (req, res, next) => {
@@ -53,7 +53,7 @@ router.get('/:id', isAuthenticated, (req, res, next) => {
  * @route GET /seller/
  * @group seller - Seller routes
  * @returns {Array.object} 200 - Array of Seller objects
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/', isAuthenticated, (req, res, next) => {

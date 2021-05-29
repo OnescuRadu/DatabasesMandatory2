@@ -9,7 +9,7 @@ const { manufacturerController } = require('../controllers');
  * @param {integer} pageNumber.query - Page number for pagination
  * @param {integer} pageSize.query - Page size for pagination 
  * @returns {Array.object} 200 - Array of Manufacturer objects
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/', isAuthenticated, (req, res, next) => {
@@ -27,7 +27,7 @@ router.get('/', isAuthenticated, (req, res, next) => {
  * @group manufacturer - Manufacturer routes
  * @param {string} q.query - Search query
  * @returns {Array.object} 200 - Array of matching Manufacturer objects
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/search', isAuthenticated, (req, res, next) => {
@@ -43,7 +43,7 @@ router.get('/search', isAuthenticated, (req, res, next) => {
  * @group manufacturer - Manufacturer routes
  * @param {string} id.path.required - Manufacturer id to look up
  * @returns {object} 200 - Manufacturer object
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/:id', isAuthenticated, (req, res, next) => {

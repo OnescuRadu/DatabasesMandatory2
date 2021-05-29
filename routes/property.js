@@ -8,7 +8,7 @@ const { propertyController } = require('../controllers');
  * @group property - Property routes
  * @param {integer} id.path.required - The requested Property's id
  * @returns {object} 200 - Property object or null
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/:id', isAuthenticated, (req, res, next) => {
@@ -23,7 +23,7 @@ router.get('/:id', isAuthenticated, (req, res, next) => {
  * @route GET /property/
  * @group property - Property routes
  * @returns {Array.object} 200 - Array of Property objects
- * @returns {string} 401 - User not authenticated
+ * @returns {Error} 401 - User not authenticated
  * @security cookie
  */
 router.get('/', isAuthenticated, (req, res, next) => {
