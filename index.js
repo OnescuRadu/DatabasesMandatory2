@@ -75,12 +75,6 @@ let options = {
         ],
         schemes: ['http'],
 		securityDefinitions: {
-            JWT: {
-                type: 'apiKey',
-                in: 'header',
-                name: 'Authorization',
-                description: "",
-            }
         }
     },
     basedir: __dirname, //app absolute path

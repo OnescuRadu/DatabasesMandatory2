@@ -16,7 +16,7 @@ router.get('/login', (req, res) => {
  * Route used to register a new account
  * @route POST /auth/register
  * @group auth - Authentication routes
- * @param {UserData.model} UserData.body.required 
+ * @param {UserData.model} UserData.body.required - The user data
  * @returns {object} 200 - The newly created user object
  * @returns {Error}  500 - Internal server error
  * @returns {Error}  400 - Missing required fields
@@ -44,7 +44,7 @@ router.get('/logout', (req, res, next) => {
  * Route used to login
  * @route POST /auth/login
  * @group auth - Authentication routes
- * @param {UserData.model} UserData.body.required 
+ * @param {UserData.model} UserData.body.required - The user data
  * @returns {object} 200 - Login success message
  * @returns {Error}  302 - Redirect to GET /auth/login
  */

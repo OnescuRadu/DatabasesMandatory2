@@ -40,21 +40,34 @@ async function createSeller(data) {
 }
 
 function getAllSellers() {
-    return db.seller.findMany({ where: { deleted: false }});
+    return db.seller.findMany({
+        where: { deleted: false },
+        include: {
+            address: true
+        }
+    });
 }
 
 function getSellerById(id) {
-    return db.seller.findUnique({ where: { id }});
+    return db.seller.findUnique({
+        where: { id },
+        include: {
+            address: true
+        }
+    });
 }
 
 async function findSellers(query) {
     const sellers = await db.seller.findMany({
-        where: { deleted: false } 
+        where: { deleted: false },
+        include: {
+            address: true
+        }
     });
     return sellers.filter(seller => 
         seller.name.indexOf(query) !== -1
         || seller.legalName.indexOf(query) !== -1
-        || seller.cvr.indexOf(query) !== -1)
+        || seller.cvr.indexOf(query) !== -1);
 }
 
 function findByProduct(id) {
@@ -65,8 +78,11 @@ function findByProduct(id) {
                     productId: id
                 }
             }
+        },
+        include: {
+            address: true
         }
-    })
+    });
 }
 
 async function updateSeller(id, data, userId) {
@@ -82,7 +98,7 @@ async function updateSeller(id, data, userId) {
     }
 
     if (caller.role !== "Admin" && seller.ownerId !== userId) {
-        throw new APIError("You're only allowed to edit sellers you own.", 400);
+        throw new APIError("You're only allowed to update sellers you own.", 400);
     }
 
     const updateData = pick(data, ["name", "legalName", "cvr", "phoneNumber"]);
