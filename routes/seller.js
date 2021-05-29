@@ -81,8 +81,8 @@ router.post('/', hasRole("Admin"), (req, res, next) => {
 });
 
 /**
- * Create new Seller - Manger or Admin role required
- * @route POST /seller/
+ * Update Seller - Manger or Admin role required
+ * @route PUT /seller/
  * @group seller - Seller routes
  * @param {string} id.path.required - The id of the Seller to be looked up
  * @param {SellerData.model} SellerData.body.required - The Seller data
