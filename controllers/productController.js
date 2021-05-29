@@ -191,6 +191,15 @@ async function removeProductFromGroup(productId, groupId) {
         throw new APIError('Product is not part of that product group', 400);
     }
 
+    db.productGroup.update({ 
+        where: { id: groupId },
+        data: {
+            products: {
+                disconnect: { id: productId },
+            },
+        },
+    });
+
     return db.product.update({
         where: { id: productId },
         data: {
