@@ -60,6 +60,34 @@ app.use(require('./routes'));
 app.use(errorHandler);
 app.use('/uploads', express.static('uploads'));
 
+const expressSwagger = require('express-swagger-generator')(app);
+let options = {
+    swaggerDefinition: {
+        info: {
+            description: 'MongoDB backed REST API',
+            title: 'Databases Final Project',
+            version: '1.0.0',
+        },
+        host: 'localhost:3000',
+        basePath: '/',
+        produces: [
+            "application/json"
+        ],
+        schemes: ['http'],
+		securityDefinitions: {
+            JWT: {
+                type: 'apiKey',
+                in: 'header',
+                name: 'Authorization',
+                description: "",
+            }
+        }
+    },
+    basedir: __dirname, //app absolute path
+    files: ['./routes/**/*.js'] //Path to the API handle folder
+};
+expressSwagger(options);
+
 app.listen(port, (error) => {
     if (error) {
         throw error;
