@@ -35,7 +35,7 @@ router.get('/:id', hasRole('Admin'), (req, res, next) => {
  * Create User - Admin role required
  * @route POST /user/
  * @group user - User routes
- * @param {CreateUserData.model} CreateUserData.required - Create User data
+ * @param {CreateUserData.model} CreateUserData.body.required - Create User data
  * @returns {object} 200 - Newly created User object or null
  * @returns {Error} 401 - Not authorized
  * @returns {Error} 400 - Missing required fields.
@@ -52,7 +52,7 @@ router.post('/', hasRole("Admin"), (req, res, next) => {
  * Update Profile - Authentication required
  * @route PUT /user/profile
  * @group user - User routes
- * @param {UpdateProfileData.model} UpdateProfileData.required - The user profile data
+ * @param {UpdateProfileData.model} UpdateProfileData.body.required - The user profile data
  * @returns {object} 200 - The updated User object
  * @returns {Error} 401 - Not authorized
  * @returns {Error} 400 - Missing required fields.
@@ -68,7 +68,7 @@ router.put('/profile', isAuthenticated, (req, res, next) => {
  * Change password - Authentication required
  * @route POST /user/change-pass
  * @group user - User routes
- * @param {ChangePasswordRequest.model} ChangePasswordRequest.required - ChangePasswordRequest data
+ * @param {ChangePasswordRequest.model} ChangePasswordRequest.body.required - ChangePasswordRequest data
  * @returns {object} 200 - The updated User object
  * @returns {Error} 401 - Not authorized
  * @returns {Error} 400 - Missing required fields.
@@ -123,8 +123,8 @@ router.delete('/', isAuthenticated, (req, res, next) => {
  * @property {string} number.required - The building number
  * @property {string} floor - The floor number
  * @property {string} door - The door number
- * @property {string} zipCode - The zip code
- * @property {string} city - The city's name
+ * @property {string} zipCode.required - The zip code
+ * @property {string} city.required - The city's name
  */
 
 module.exports = router;
