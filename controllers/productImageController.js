@@ -19,7 +19,7 @@ function createProductImage(req) {
     } else if (!req.file) {
         throw new APIError('Please select an image to upload', 404);
     } else if (req.err) {
-        throw new APIError('Internal server error.', 500);
+        throw new APIError('Internal server error', 500);
     }
 
     const productId = req.body.productId;
