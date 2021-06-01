@@ -1,4 +1,8 @@
+Note that this folder is also a git repository. Use the commit history to check out the MySQL version (for Mandatory 2), found at commit e756ab96cf97c055e23ee6ca5b0692b61d1d66ce
+
 # Installation
+
+NOTE: For the final project, we're using MongoDB, and as such the database connection string from 1. should be a mongo connection string pointing to where you're running it. (in our case we only used Atlas during development)
 
 After cloning/unzipping the project, do the following:
  1. Create an `.env` file with the following:
